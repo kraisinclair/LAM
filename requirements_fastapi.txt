@@ -1,0 +1,20 @@
+# FastAPI specific requirements
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+
+# Core dependencies from original requirements.txt
+torch
+torchvision
+torchaudio
+numpy
+pillow
+opencv-python
+moviepy
+omegaconf
+safetensors
+patoolib
+
+# Additional dependencies that might be needed
+requests
+aiofiles 
