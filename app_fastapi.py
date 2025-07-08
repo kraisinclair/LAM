@@ -179,8 +179,8 @@ def process_image_to_zip(image_path: str, motion_name: str = "nice") -> tuple[st
         base_vid = motion_name
         flame_params_dir = os.path.join("./assets/sample_motion/export", base_vid, "flame_param")
         
-                 if not os.path.exists(flame_params_dir):
-             raise HTTPException(status_code=400, detail=f"Motion '{motion_name}' not found")
+        if not os.path.exists(flame_params_dir):
+            raise HTTPException(status_code=400, detail=f"Motion '{motion_name}' not found")
         
         base_iid = "uploaded_image"
         dump_video_path = os.path.join(working_dir, "output.mp4")
