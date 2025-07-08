@@ -209,7 +209,7 @@ async def process_image_core(image_path: str, motion_video: str, enable_oac_file
             try:
                 logger.info("Creating OAC ZIP file...")
                 from tools.generateARKITGLBWithBlender import generate_glb
-                import patoolib
+                import zipfile
                 
                 base_iid = os.path.basename(image_path).split('.')[0]
                 oac_dir = os.path.join(working_dir, 'open_avatar_chat', base_iid)
@@ -240,19 +240,13 @@ async def process_image_core(image_path: str, motion_video: str, enable_oac_file
                 if os.path.exists(output_zip_path):
                     os.remove(output_zip_path)
                 
-                original_cwd = os.getcwd()
-                oac_parent_dir = os.path.dirname(oac_dir)
-                base_iid_dir = os.path.basename(oac_dir)
-                os.chdir(oac_parent_dir)
-                try:
-                    patoolib.create_archive(
-                        archive=os.path.abspath(output_zip_path),
-                        filenames=[base_iid_dir],
-                        verbosity=-1,
-                        program='zip'
-                    )
-                finally:
-                    os.chdir(original_cwd)
+                # Create ZIP file using built-in zipfile module
+                with zipfile.ZipFile(output_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                    for root, dirs, files in os.walk(oac_dir):
+                        for file in files:
+                            file_path = os.path.join(root, file)
+                            arc_name = os.path.relpath(file_path, os.path.dirname(oac_dir))
+                            zipf.write(file_path, arc_name)
                 
                 shutil.rmtree(oac_dir)
                 logger.info(f"OAC ZIP file created: {output_zip_path}")

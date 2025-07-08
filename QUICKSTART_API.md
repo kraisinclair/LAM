@@ -84,6 +84,9 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 sudo apt-get update && sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 
+# Test requirements first (recommended)
+python3 test_requirements.py
+
 # Build the image (with automatic fallback)
 chmod +x build_docker.sh
 ./build_docker.sh
@@ -109,11 +112,29 @@ If you encounter CUDA compilation errors:
 
 ### Troubleshooting Docker Build
 
+**Test requirements first:**
+
+```bash
+# Validate requirements before building
+python3 test_requirements.py
+
+# Check for version conflicts
+pip install --dry-run -r requirements_fastapi.txt
+```
+
 **CUDA compilation errors?**
 
 ```bash
 # Use minimal build (skips problematic CUDA packages)
 ./build_docker.sh --minimal
+```
+
+**Package version conflicts?**
+
+```bash
+# The patoolib issue has been fixed (using built-in zipfile instead)
+# For other conflicts, check with the test script:
+python3 test_requirements.py
 ```
 
 **Build too slow?**

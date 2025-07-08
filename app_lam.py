@@ -306,7 +306,7 @@ def demo_lam(flametracking, lam, cfg):
                 from tools.generateARKITGLBWithBlender import generate_glb
                 from pathlib import Path
                 import shutil
-                import patoolib
+                import zipfile
 
                 oac_dir = os.path.join('./output/open_avatar_chat', base_iid)
                 saved_head_path = lam.renderer.flame_model.save_shaped_mesh(shape_param.unsqueeze(0).cuda(), fd=oac_dir)
@@ -326,19 +326,15 @@ def demo_lam(flametracking, lam, cfg):
                 output_zip_path = os.path.join('./output/open_avatar_chat', base_iid + '.zip')
                 if os.path.exists(output_zip_path):
                     os.remove(output_zip_path)
-                original_cwd = os.getcwd()
-                oac_parent_dir = os.path.dirname(oac_dir)
-                base_iid_dir = os.path.basename(oac_dir)
-                os.chdir(oac_parent_dir)
-                try:
-                    patoolib.create_archive(
-                        archive=os.path.abspath(output_zip_path),
-                        filenames=[base_iid_dir],
-                        verbosity=-1,
-                        program='zip'
-                    )
-                finally:
-                    os.chdir(original_cwd)
+                
+                # Create ZIP file using built-in zipfile module
+                with zipfile.ZipFile(output_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                    for root, dirs, files in os.walk(oac_dir):
+                        for file in files:
+                            file_path = os.path.join(root, file)
+                            arc_name = os.path.relpath(file_path, os.path.dirname(oac_dir))
+                            zipf.write(file_path, arc_name)
+                
                 shutil.rmtree(oac_dir)
             except Exception as e:
                 output_zip_path = f"Archive creation failed: {str(e)}"
