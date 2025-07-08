@@ -70,6 +70,8 @@ python client_example.py --image path/to/your/image.jpg
 
 For containerized deployment:
 
+### Quick Docker Setup
+
 ```bash
 # Install Docker with GPU support
 curl -fsSL https://get.docker.com -o get-docker.sh
@@ -82,8 +84,43 @@ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.li
 sudo apt-get update && sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 
+# Build the image (with automatic fallback)
+chmod +x build_docker.sh
+./build_docker.sh
+
 # Run with docker-compose
 docker-compose up -d
+```
+
+### Build Options
+
+If you encounter CUDA compilation errors:
+
+```bash
+# Try the smart build script (recommended)
+./build_docker.sh
+
+# Or build minimal version (faster, fewer features)
+./build_docker.sh --minimal
+
+# Or build and test
+./build_docker.sh --test
+```
+
+### Troubleshooting Docker Build
+
+**CUDA compilation errors?**
+
+```bash
+# Use minimal build (skips problematic CUDA packages)
+./build_docker.sh --minimal
+```
+
+**Build too slow?**
+
+```bash
+# Direct build with original Dockerfile
+docker build -t lam-api:latest .
 ```
 
 ## 🧪 Testing

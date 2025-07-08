@@ -1,0 +1,50 @@
+# Docker-specific requirements file
+# This excludes packages that require CUDA compilation during build
+
+# Core dependencies
+torch
+torchvision
+torchaudio
+omegaconf
+numpy
+opencv-python
+pillow
+scipy
+matplotlib
+scikit-learn
+scikit-image
+imageio
+imageio-ffmpeg
+tqdm
+tensorboard
+wandb
+huggingface-hub
+transformers
+accelerate
+safetensors
+
+# 3D and graphics (no CUDA compilation needed)
+trimesh
+open3d
+plotly
+
+# Media processing
+moviepy
+ffmpeg-python
+
+# Web framework
+gradio
+
+# Utilities
+rich
+psutil
+packaging
+pyyaml
+
+# FLAME model dependencies
+chumpy
+
+# Note: The following packages require CUDA compilation and will be installed separately:
+# - diff-gaussian-rasterization
+# - simple-knn
+# - pytorch3d (will be installed from pre-built wheel if available) 

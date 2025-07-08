@@ -1,0 +1,80 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Python cache and environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs and temporary files
+*.log
+logs/
+temp/
+tmp/
+.tmp/
+
+# Output directories (will be created in container)
+output/
+exps/
+dumps/
+results/
+runtime_data/
+
+# Model files (too large, should be mounted or downloaded separately)
+model_zoo/
+*.pth
+*.pkl
+*.safetensors
+*.ckpt
+*.pt
+
+# Documentation
+README*.md
+*.md
+docs/
+
+# Docker files for other builds
+Dockerfile.*
+docker-compose.override.yml 
