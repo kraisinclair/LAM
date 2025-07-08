@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  lam-api:
+    build: .
+    container_name: lam-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount model directories (you need to create these on host)
+      - ./model_zoo:/app/model_zoo:ro
+      - ./assets:/app/assets:ro
+      - ./output:/app/output
+      - /tmp:/tmp
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - PYTHONPATH=/app
+      - APP_ENABLED=1
+      - APP_MODEL_NAME=./model_zoo/lam_models/releases/lam/lam-20k/step_045500/
+      - APP_INFER=./configs/inference/lam-20k-8gpu.yaml
+      - APP_TYPE=infer.lam
+      - NUMBA_THREADING_LAYER=omp
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  nginx:
+    image: nginx:alpine
+    container_name: lam-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deployment/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - lam-api
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
